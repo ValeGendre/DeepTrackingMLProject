@@ -11,7 +11,7 @@ class MiceData(Dataset):
         res = 0
         self.framepervidnb = []
         while res==0:
-            vidinb = len([f for f in os.listdir(data.image_path) if f.startswith('vid{}'.format(idx)) and os.path.isfile(os.path.join(data.image_path, f))])
+            vidinb = len([f for f in os.listdir(self.image_path) if f.startswith('vid{}'.format(idx)) and os.path.isfile(os.path.join(self.image_path, f))])
             if vidinb == 0:
                 res=1
             else :
