@@ -3,7 +3,7 @@ import numpy as np
 from torch.utils.data import Dataset,DataLoader
 
 class MiceData(Dataset):
-    def __init__(self):
+    def __init__(self,root_dir):
         self.root_dir = root_dir
         self.image_path = os.path.join(root_dir, 'all_frames') # Warning : do not rename all_frames folder
         # How many video do we have ? How many frames per video do we have ?
