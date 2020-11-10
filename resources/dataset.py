@@ -10,3 +10,6 @@ class MiceData(Dataset):
 
     def __getitem__(self, i):
         pass
+
+
+# Coucou
