@@ -24,4 +24,22 @@ class MiceData(Dataset):
         return self.size
 
     def __getitem__(self, i):
-        pass
+        if i >= len(self):
+            raise IndexError('List index out of range. There are no images for the index: the index must be between 0 and len(data)-1')
+        first_idx = np.zeros((self.vidnb,))
+        correction = np.zeros((self.vidnb,))
+        for k in range(1,self.vidnb):
+            first_idx[k] = sum(self.framepervidnb[0:k]) -1
+            correction[k] = k-1
+        tmp = first_idx - i - correction
+        for k in range(1,self.vidnb+1):
+            if tmp[-k] <= 0:
+                vid_find = self.vidnb - k +1    
+                break
+        frame1_find = abs(tmp[vid_find-1]) +1 
+        frame2_find = frame1_find +1
+        img1_name = "vid{}_{}".format(vid_find,int(frame1_find))
+        img2_name = "vid{}_{}".format(vid_find,int(frame2_find))
+        img1 = cv2.imread(self.image_path+"\\"+img1_name+".jpg")
+        img2 = cv2.imread(self.image_path+"\\"+img2_name+".jpg")
+        return img1,img2
