@@ -45,13 +45,18 @@ class MiceData(Dataset):
             first_idx[k] = sum(self.framepervidnb[0:k]) -1
             correction[k] = k-1
         # By making the difference between the first_idx list and the number of item asked
+        # Some values of tmp will become negativ. Taking the index of the last negativ value gives
+        # the number of the video where the asked frame is.        
         tmp = first_idx - i - correction
         for k in range(1,self.vidnb+1):
             if tmp[-k] <= 0:
                 vid_find = self.vidnb - k +1    
                 break
+        # the last negativ value is directly linked to the number of frame
         frame1_find = abs(tmp[vid_find-1]) +1 
         frame2_find = frame1_find +1
+
+        # formatting the name of the frames and load in img1 and img2
         img1_name = "vid{}_{}".format(vid_find,int(frame1_find))
         img2_name = "vid{}_{}".format(vid_find,int(frame2_find))
         img1 = plt.imread(self.image_path+"\\"+img1_name+".jpg")
