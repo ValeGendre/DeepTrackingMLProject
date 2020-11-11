@@ -1,3 +1,5 @@
 
 *.json
 *.jpg
+*.pyc
+test.py
