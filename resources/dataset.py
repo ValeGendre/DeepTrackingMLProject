@@ -6,7 +6,7 @@ from torch.utils.data import Dataset,DataLoader
 os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 
 class MiceData(Dataset):
-    def __init__(self,root_dir):
+    def __init__(self,root_dir,n):
         # Enter your own root_dir (for instance : \resources\data)
         # all_frames folder contains each frames of the data videos
         # the frames are named this way: nbvid_nbframe.jpg (f.i : vid2_652.jpg)
@@ -14,6 +14,9 @@ class MiceData(Dataset):
         # Warning : do not rename all_frames folder
         self.root_dir = root_dir
         self.image_path = os.path.join(root_dir, 'all_frames') 
+        self.n = n
+        if (n != 2) and (n != 3):
+            raise NameError('The second argument must be n=2 or n=3 depending on how many frames are needed.')
         # How many video do we have ? How many frames per video do we have ?
         idx = 1
         res = 0
@@ -32,33 +35,65 @@ class MiceData(Dataset):
     def __len__(self):
         # For each video, the number of frames tuples we can make is the nb of frame -1
         # As we have vidnb video, the total of tuple is 'size' bellow.
-        self.size = sum(self.framepervidnb) - self.vidnb
+        if self.n == 2 : self.size = sum(self.framepervidnb) - self.vidnb
+        elif self.n == 3 : self.size = sum(self.framepervidnb) - 2*self.vidnb
         return self.size
 
     def __getitem__(self, i):
-        if i >= len(self):
+        n = self.n
+        if i >= len(self) or i<0:
             raise IndexError('List index out of range. There are no images for the index: the index must be between 0 and len(data)-1')
-        # first_idx list contains the first indexes to beyond to a certain video
-        first_idx = np.zeros((self.vidnb,))
-        correction = np.zeros((self.vidnb,))
-        for k in range(1,self.vidnb):
-            first_idx[k] = sum(self.framepervidnb[0:k]) -1
-            correction[k] = k-1
-        # By making the difference between the first_idx list and the number of item asked
-        # Some values of tmp will become negativ. Taking the index of the last negativ value gives
-        # the number of the video where the asked frame is.        
-        tmp = first_idx - i - correction
-        for k in range(1,self.vidnb+1):
-            if tmp[-k] <= 0:
-                vid_find = self.vidnb - k +1    
-                break
-        # the last negativ value is directly linked to the number of frame
-        frame1_find = abs(tmp[vid_find-1]) +1 
-        frame2_find = frame1_find +1
+        if n == 2:
+            # first_idx list contains the first indexes to beyond to a certain video
+            first_idx = np.zeros((self.vidnb,))
+            correction = np.zeros((self.vidnb,))
+            for k in range(1,self.vidnb):
+                first_idx[k] = sum(self.framepervidnb[0:k]) -1
+                correction[k] = k-1
+            # By making the difference between the first_idx list and the number of item asked
+            # Some values of tmp will become negative. Taking the index of the last negative value gives
+            # the number of the video where the asked frame is.        
+            tmp = first_idx - i - correction
+            for k in range(1,self.vidnb+1):
+                if tmp[-k] <= 0:
+                    vid_find = self.vidnb - k +1    
+                    break
+            # the last negative value is directly linked to the number of frame
+            frame1_find = abs(tmp[vid_find-1]) +1 
+            frame2_find = frame1_find +1
 
-        # formatting the name of the frames and load in img1 and img2
-        img1_name = "vid{}_{}".format(vid_find,int(frame1_find))
-        img2_name = "vid{}_{}".format(vid_find,int(frame2_find))
-        img1 = plt.imread(self.image_path+"\\"+img1_name+".jpg")
-        img2 = plt.imread(self.image_path+"\\"+img2_name+".jpg")
-        return img1,img2
+            # formatting the name of the frames and load in img1 and img2
+            img1_name = "vid{}_{}".format(vid_find,int(frame1_find))
+            img2_name = "vid{}_{}".format(vid_find,int(frame2_find))
+            img1 = plt.imread(self.image_path+"\\"+img1_name+".jpg")
+            img2 = plt.imread(self.image_path+"\\"+img2_name+".jpg")
+            return img1,img2
+        elif n == 3:
+            # first_idx list contains the first indexes to beyond to a certain video
+            first_idx = np.zeros((self.vidnb,))
+            correction = np.zeros((self.vidnb,))
+            for k in range(1,self.vidnb):
+                first_idx[k] = sum(self.framepervidnb[0:k]) -2
+                correction[k] = 2*(k-1)
+            # By making the difference between the first_idx list and the number of item asked
+            # Some values of tmp will become negative. Taking the index of the last negative value gives
+            # the number of the video where the asked frame is.        
+            tmp = first_idx - i - correction
+            for k in range(1,self.vidnb+1):
+                if tmp[-k] <= 0:
+                    vid_find = self.vidnb - k +1    
+                    break
+            # the last negative value is directly linked to the number of frame
+            frame1_find = abs(tmp[vid_find-1]) +1 
+            frame2_find = frame1_find +1
+            frame3_find = frame2_find +1 
+               
+            # formatting the name of the frames and load in img1 img2 and img3
+            img1_name = "vid{}_{}".format(vid_find,int(frame1_find))
+            img2_name = "vid{}_{}".format(vid_find,int(frame2_find))
+            img3_name = "vid{}_{}".format(vid_find,int(frame3_find))
+            img1 = plt.imread(self.image_path+"\\"+img1_name+".jpg")
+            img2 = plt.imread(self.image_path+"\\"+img2_name+".jpg")
+            img3 = plt.imread(self.image_path+"\\"+img3_name+".jpg")
+            return img1,img2,img3
+        
