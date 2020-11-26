@@ -6,7 +6,7 @@ from torch.utils.data import Dataset,DataLoader
 os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 
 class MiceData(Dataset):
-    def __init__(self,root_dir,n):
+    def __init__(self,root_dir,n=2):
         # Enter your own root_dir (for instance : \resources\data)
         # all_frames folder contains each frames of the data videos
         # the frames are named this way: nbvid_nbframe.jpg (f.i : vid2_652.jpg)
