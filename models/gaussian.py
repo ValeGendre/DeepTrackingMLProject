@@ -17,7 +17,7 @@ def gaussian_shaped_labels(sigma, sz):
 
 def gaussian_label(sigma, sz, bb, img_size):
     x,y,dx,dy = bb
-    gaussian_shape = gaussian_shaped_labels(sigma, sz):
+    gaussian_shape = gaussian_shaped_labels(sigma, sz)
     label = np.zeros(img_size)
     label[y:y+dy, x:x+dx] = gaussian_shape
 
