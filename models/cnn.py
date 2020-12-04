@@ -3,9 +3,9 @@ from torch import nn
 import torch.nn.functional as F
 
 
-class CNN(nn.Module):
+class CNN_model(nn.Module):
     def __init__(self):
-        super(CNN, self).__init__()
+        super(CNN_model, self).__init__()
         self.C1 = nn.Conv2d(1, 32, 3)            
         self.C2 = nn.Conv2d(32, 32, 3)
         self.Norm = nn.LocalResponseNorm(size=5, alpha=0.0001, beta=0.75, k=1)
