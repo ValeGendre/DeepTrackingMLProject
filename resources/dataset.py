@@ -2,6 +2,7 @@ import torch, os
 import numpy as np
 import matplotlib.pyplot as plt
 from torch.utils.data import Dataset,DataLoader
+from skimage.color import rgb2gray
 
 os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 
@@ -65,8 +66,8 @@ class MiceData(Dataset):
             # formatting the name of the frames and load in img1 and img2
             img1_name = "vid{}_{}".format(vid_find,int(frame1_find))
             img2_name = "vid{}_{}".format(vid_find,int(frame2_find))
-            img1 = plt.imread(self.image_path+"\\"+img1_name+".jpg")
-            img2 = plt.imread(self.image_path+"\\"+img2_name+".jpg")
+            img1 = rgb2gray(plt.imread(self.image_path+"\\"+img1_name+".jpg")).astype(np.float32)
+            img2 = rgb2gray(plt.imread(self.image_path+"\\"+img2_name+".jpg")).astype(np.float32)
             return img1,img2
         elif n == 3:
             # first_idx list contains the first indexes to beyond to a certain video
@@ -92,8 +93,8 @@ class MiceData(Dataset):
             img1_name = "vid{}_{}".format(vid_find,int(frame1_find))
             img2_name = "vid{}_{}".format(vid_find,int(frame2_find))
             img3_name = "vid{}_{}".format(vid_find,int(frame3_find))
-            img1 = plt.imread(self.image_path+"\\"+img1_name+".jpg")
-            img2 = plt.imread(self.image_path+"\\"+img2_name+".jpg")
-            img3 = plt.imread(self.image_path+"\\"+img3_name+".jpg")
+            img1 = rgb2gray(plt.imread(self.image_path+"\\"+img1_name+".jpg"))
+            img2 = rgb2gray(plt.imread(self.image_path+"\\"+img2_name+".jpg"))
+            img3 = rgb2gray(plt.imread(self.image_path+"\\"+img3_name+".jpg"))
             return img1,img2,img3
         

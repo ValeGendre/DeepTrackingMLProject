@@ -6,8 +6,8 @@ import torch.nn.functional as F
 class CNN_model(nn.Module):
     def __init__(self):
         super(CNN_model, self).__init__()
-        self.C1 = nn.Conv2d(1, 32, 3)            
-        self.C2 = nn.Conv2d(32, 32, 3)
+        self.C1 = nn.Conv2d(1, 32, 3, padding=1)            
+        self.C2 = nn.Conv2d(32, 32, 3, padding=1)
         self.Norm = nn.LocalResponseNorm(size=5, alpha=0.0001, beta=0.75, k=1)
         
 

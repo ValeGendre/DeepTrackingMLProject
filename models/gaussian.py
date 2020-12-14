@@ -25,3 +25,10 @@ def gaussian_label(sigma, sz, bb, img_size):
     label = np.roll(label, int(-np.floor(float(img_size[1]) / 2.) - 1), axis=1)
 
     return label
+
+def fft_label(sigma, sz, cz, bb, img_size, DEVICE):
+    label = torch.tensor(gaussian_label(sigma, sz, bb, img_size))
+    y = label.view((1, 1, cz[0], cz[1])).to(DEVICE)
+    yf = torch.rfft(y, signal_ndim=2) 
+    y = torch.irfft(yf, signal_ndim=2)
+    return y, yf
