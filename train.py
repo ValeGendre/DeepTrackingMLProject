@@ -7,6 +7,7 @@ import pandas
 import time
 import numpy
 import matplotlib.pyplot as plt
+import tqdm
 
 from IPython import display
 
@@ -71,7 +72,7 @@ model.train()
 for i_epoch in range(nb_epoch):
     losses = []
     t0 = time.time()
-    for template, search in miceset_loader:
+    for template, search in tqdm.tqdm(miceset_loader):
         optimizer.zero_grad()
 
         # Generate random bounding box 
@@ -118,5 +119,6 @@ for i_epoch in range(nb_epoch):
         Consistency_loss = criterion(initial_label, backward_tracking)
         Consistency_loss.backward()
         optimizer.step()
-        losses.append(Consistency_loss)
-    print(f'Epoch {i}/{nb_epoch} : loss = {np.mean(losses)}, it took : {time.time() - t0:.3g} s')
+        losses.append(Consistency_loss.detach().cpu().numpy())
+    torch.save(model.state_dict(), f'model_epoch{i_epoch}')
+    print(f'Epoch {i_epoch}/{nb_epoch} : loss = {np.mean(losses)}, it took : {time.time() - t0:.3g} s')
