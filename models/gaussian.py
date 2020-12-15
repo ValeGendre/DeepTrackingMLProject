@@ -21,8 +21,8 @@ def gaussian_label(sigma, sz, bb, img_size):
     label = np.zeros(img_size)
     label[y:y+dy, x:x+dx] = gaussian_shape
 
-    label = np.roll(label, int(-np.floor(float(img_size[0]) / 2.) - 1), axis=0)
-    label = np.roll(label, int(-np.floor(float(img_size[1]) / 2.) - 1), axis=1)
+    #label = np.roll(label, int(-np.floor(float(img_size[0]) / 2.) - 1), axis=0)
+    #label = np.roll(label, int(-np.floor(float(img_size[1]) / 2.) - 1), axis=1)
 
     return label
 
