@@ -11,7 +11,7 @@ from skimage.color import rgb2gray
 from models.model import DCFNet
 from models.gaussian import fft_label
 
-weights_path = 'Training_withBB_model_epoch1'
+weights_path = 'Training3_model_epoch50'
 output_path = 'Trackingnew.txt'
 lambda0 = 1e-4
 crop_sz = 250
@@ -33,9 +33,9 @@ model.to(DEVICE)
 model.eval()
 
 img_path = 'resources/data/all_frames/vid{}_{}.jpg'
-Video = 1
+Video = 2
 id0 = 1
-idmax = 250
+idmax = 800
 
 c = [87, 71]
 initial_bb = [c[0] - 25, c[1] - 25, 51, 51]

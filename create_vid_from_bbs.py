@@ -25,7 +25,7 @@ for ids, c in zip(frame_ids, bb_centers):
     cv.rectangle(frame, p1, p2, (255,0,0), 2, 1)
     frames.append(frame)
 
-out = cv.VideoWriter(f'Labeled_Tracking_Video1.mp4',cv.VideoWriter_fourcc(*'XVID'), 30, (250, 250))
+out = cv.VideoWriter(f'Labeled_Tracking_Video1.mp4',cv.VideoWriter_fourcc(*'XVID'), 3, (250, 250))
 for i in range(len(frames)):
     out.write(frames[i])
 out.release()
