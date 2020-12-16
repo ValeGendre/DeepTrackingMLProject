@@ -98,3 +98,58 @@ class MiceData(Dataset):
             img3 = rgb2gray(plt.imread(self.image_path+"\\"+img3_name+".jpg"))
             return img1,img2,img3
         
+class MiceData2(Dataset): # Pour la video 2 seulement
+    def __init__(self,root_dir,n=2):
+        self.root_dir = root_dir
+        self.image_path = os.path.join(root_dir, 'all_frames') 
+        self.n = n
+        if (n != 2) and (n != 3):
+            raise NameError('The second argument must be n=2 or n=3 depending on how many frames are needed.')
+        # How many video do we have ? How many frames per video do we have ?
+        idx = 1
+        res = 0
+        self.framevid2 = 891
+
+
+    def __len__(self):
+        if self.n == 2 : self.size = self.framevid2 - 10
+        elif self.n == 3 : self.size = self.framevid2 - 20
+        return self.size
+
+    def __getitem__(self, i):
+        n = self.n
+        if i >= len(self) or i<0:
+            raise IndexError('List index out of range. There are no images for the index: the index must be between 0 and len(data)-1')
+        # Bounding box de la ieme frame
+        input_path = 'vid2_labels.txt'
+        line = 2*i
+        f=open(input_path)
+        lines=f.readlines()
+        BB_line = lines[line+1]
+        cx, cy = BB_line.split()
+        f.close()
+        
+        if n == 2:
+            frame1_find = i+1
+            frame2_find = frame1_find +10
+
+            # formatting the name of the frames and load in img1 and img2
+            img1_name = "vid2_{}".format(int(frame1_find))
+            img2_name = "vid2_{}".format(int(frame2_find))
+            img1 = rgb2gray(plt.imread(self.image_path+"\\"+img1_name+".jpg")).astype(np.float32)
+            img2 = rgb2gray(plt.imread(self.image_path+"\\"+img2_name+".jpg")).astype(np.float32)
+            return img1,img2,cx,cy
+        
+        elif n == 3:
+            frame1_find = i+1
+            frame2_find = frame1_find +10
+            frame3_find = frame2_find +10
+               
+            # formatting the name of the frames and load in img1 img2 and img3
+            img1_name = "vid2_{}".format(int(frame1_find))
+            img2_name = "vid2_{}".format(int(frame2_find))
+            img3_name = "vid2_{}".format(int(frame3_find))
+            img1 = rgb2gray(plt.imread(self.image_path+"\\"+img1_name+".jpg"))
+            img2 = rgb2gray(plt.imread(self.image_path+"\\"+img2_name+".jpg"))
+            img3 = rgb2gray(plt.imread(self.image_path+"\\"+img3_name+".jpg"))
+            return img1,img2,img3,cx,cy
