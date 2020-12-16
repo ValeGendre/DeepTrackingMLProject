@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 bb_centers = []
 frame_ids = []
-input_path = 'vid2_labels.txt'
+input_path = 'Trackingnew.txt'
 with open(input_path, 'r') as f:
     while True:
         ID = f.readline() # ID of the frame

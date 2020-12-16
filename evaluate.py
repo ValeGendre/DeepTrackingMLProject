@@ -11,7 +11,7 @@ from skimage.color import rgb2gray
 from models.model import DCFNet
 from models.gaussian import fft_label
 
-weights_path = 'Training3_model_epoch1'
+weights_path = 'Training_withBB_model_epoch1'
 output_path = 'Trackingnew.txt'
 lambda0 = 1e-4
 crop_sz = 250
