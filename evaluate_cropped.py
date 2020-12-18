@@ -12,13 +12,13 @@ from models.model import DCFNet
 from models.gaussian import fft_label
 
 weights_path = 'Training_croppedBB_model_epoch120'
-output_path = 'Tracking_cropped.txt'
+output_path = 'test.txt'
 crop_sz = 51
 output_sz = 31
 
 lambda0 = 1e-4
 padding = 2.0
-output_sigma_factor = 0.1
+output_sigma_factor = 5
 
 output_sigma = crop_sz / (1 + padding) * output_sigma_factor
 
@@ -32,11 +32,11 @@ model.to(DEVICE)
 model.eval()
 
 img_path = 'resources/data/all_frames/vid{}_{}.jpg'
-Video = 1
+Video = 2
 id0 = 1
-idmax = 250
+idmax = 800
 
-c = [87, 71]
+c = [69, 114]
 initial_bb = [c[0] - 25, c[1] - 25, 51, 51]
 
 
