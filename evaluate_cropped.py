@@ -10,13 +10,11 @@ from skimage.color import rgb2gray
 
 from models.model import DCFNet
 from models.gaussian import fft_label
-from utils.misc import *
 
-weights_path = 'Training3_model_epoch50'
-output_path = 'Trackingnew.txt'
-lambda0 = 1e-4
-crop_sz = 250
-output_sz = 51
+weights_path = 'Training_croppedBB_model_epoch120'
+output_path = 'Tracking_cropped.txt'
+crop_sz = 51
+output_sz = 31
 
 lambda0 = 1e-4
 padding = 2.0
@@ -34,16 +32,16 @@ model.to(DEVICE)
 model.eval()
 
 img_path = 'resources/data/all_frames/vid{}_{}.jpg'
-Video = 2
+Video = 1
 id0 = 1
-idmax = 800
+idmax = 250
 
 c = [87, 71]
-initial_bb = BB_from_centers(c[0], c[1])
+initial_bb = [c[0] - 25, c[1] - 25, 51, 51]
 
 
 
-label, labelf = fft_label(output_sigma, [output_sz, output_sz], [crop_sz, crop_sz], initial_bb, (250, 250), DEVICE)
+label, labelf = fft_label(output_sigma, [output_sz, output_sz], [crop_sz, crop_sz], [10, 10, 31, 31], (51, 51), DEVICE)
 numpy_label = label.detach().cpu().numpy()[0, 0]
 with open(output_path, 'a') as f:
     f.write('resources/data/all_frames/vid{}_{}.jpg'.format(Video, id0) + '\n')
@@ -56,11 +54,14 @@ with torch.no_grad():
             plt.figure(tight_layout=True)
         id2 = id1 + 10
 
-        bounding_box = BB_from_centers(c[0], c[1])
-        label, labelf = fft_label(output_sigma, [output_sz, output_sz], [crop_sz, crop_sz], initial_bb, (250, 250), DEVICE)
+        bb = [c[0] - 25, c[1] - 25, 51, 51]
+        label, labelf = fft_label(output_sigma, [output_sz, output_sz], [crop_sz, crop_sz], [10, 10, 31, 31], (51, 51), DEVICE)
 
         template = rgb2gray(plt.imread(img_path.format(Video, id1))).astype(np.float32)
         search = rgb2gray(plt.imread(img_path.format(Video, id2))).astype(np.float32)
+
+        template = template[bb[1]:bb[1]+bb[3], bb[0]:bb[0]+bb[2]]
+        search = search[bb[1]:bb[1]+bb[3], bb[0]:bb[0]+bb[2]]
 
         if show_img:
             plt.subplot(2,2,1)
@@ -70,8 +71,8 @@ with torch.no_grad():
             plt.subplot(2,2,2)
             plt.imshow(numpy_label)
 
-        template = torch.tensor(template).view(1, 1, 250, 250).to(DEVICE)
-        search = torch.tensor(search).view(1, 1, 250, 250).to(DEVICE)
+        template = torch.tensor(template).view(1, 1, 51, 51).to(DEVICE)
+        search = torch.tensor(search).view(1, 1, 51, 51).to(DEVICE)
 
         label = model.forward(template, search, labelf)
         
@@ -79,8 +80,8 @@ with torch.no_grad():
         _, _, M, N = label.shape
         numpy_label = label.detach().cpu().numpy()[0, 0]
         idx = np.argmax(numpy_label)
-        cy = int(idx % N)
-        cx = int((idx - cy)/N)
+        cy = min(max(int(idx % N) + (c[1] - 24), 25), 224)
+        cx = min(max(int((idx - int(idx % N))/N) + (c[0] - 24), 25), 224)
 
         c = [cx, cy]
         with open(output_path, 'a') as f:
