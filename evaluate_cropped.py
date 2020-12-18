@@ -80,8 +80,8 @@ with torch.no_grad():
         _, _, M, N = label.shape
         numpy_label = label.detach().cpu().numpy()[0, 0]
         idx = np.argmax(numpy_label)
-        cy = min(max(int(idx % N) + (c[1] - 24), 25), 224)
-        cx = min(max(int((idx - int(idx % N))/N) + (c[0] - 24), 25), 224)
+        cx = min(max(int(idx % N) + (c[0] - 24), 25), 224)
+        cy = min(max(int((idx - int(idx % N))/N) + (c[1] - 24), 25), 224)
 
         c = [cx, cy]
         with open(output_path, 'a') as f:

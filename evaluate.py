@@ -76,11 +76,12 @@ with torch.no_grad():
         label = model.forward(template, search, labelf)
         
         
-        _, _, M, N = label.shape
+        
         numpy_label = label.detach().cpu().numpy()[0, 0]
+        M, N = numpy_label.shape
         idx = np.argmax(numpy_label)
-        cy = int(idx % N)
-        cx = int((idx - cy)/N)
+        cx = int(idx % N)
+        cy = int((idx - cx)/N)
 
         c = [cx, cy]
         with open(output_path, 'a') as f:
