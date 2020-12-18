@@ -35,7 +35,7 @@ from utils.misc import *
 DEVICE = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 
 # Parameters init
-nb_epoch = 120
+nb_epoch = 10
 learning_rate = 0.01
 momentum = 0.9
 batch_size = 1
@@ -57,7 +57,7 @@ output_sz = 31
 
 lambda0 = 1e-4
 padding = 2.0
-output_sigma_factor = 0.1
+output_sigma_factor = 5
 
 output_sigma = crop_sz / (1 + padding) * output_sigma_factor
 
@@ -102,8 +102,8 @@ for i_epoch in range(1, nb_epoch+1):
         numpy_label = forward_tracking.detach().cpu().numpy()[0, 0]
         M, N = numpy_label.shape
         idx = np.argmax(numpy_label)
-        cy = min(int(idx % N), 35)
-        cx = min(int((idx - cy)/N), 35)
+        cx = min(int(idx % N), 35)
+        cy = min(int((idx - cx)/N), 35)
 
 
         bb = [max(cx - 15, 0), max(cy - 15, 0), 31, 31]
@@ -133,7 +133,7 @@ for i_epoch in range(1, nb_epoch+1):
         optimizer.step()
         losses.append(Consistency_loss.detach().cpu().numpy())
     if i_epoch % 10 == 0:
-        torch.save(model.state_dict(), f'Training_croppedBB_model_epoch{i_epoch}')
+        torch.save(model.state_dict(), f'Training_croppedBB_newWindow_model_epoch{i_epoch}')
     loss_graph.append(np.mean(losses))
     print(f'Epoch {i_epoch}/{nb_epoch} : loss = {np.mean(losses)}, it took : {time.time() - t0:.3g} s')
 

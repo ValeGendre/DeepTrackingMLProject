@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 bb_centers = []
 frame_ids = []
-input_path = 'Video2.txt'
+input_path = 'test2.txt'
 with open(input_path, 'r') as f:
     while True:
         ID = f.readline() # ID of the frame
@@ -25,7 +25,7 @@ for ids, c in zip(frame_ids, bb_centers):
     cv.rectangle(frame, p1, p2, (255,0,0), 2, 1)
     frames.append(frame)
 
-out = cv.VideoWriter(f'Video2.mp4',cv.VideoWriter_fourcc(*'XVID'), 10, (250, 250))
+out = cv.VideoWriter(f'test2.mp4',cv.VideoWriter_fourcc(*'XVID'), 5, (250, 250))
 for i in range(len(frames)):
     out.write(frames[i])
 out.release()

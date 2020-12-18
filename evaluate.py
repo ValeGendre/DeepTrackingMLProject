@@ -12,7 +12,7 @@ from models.model import DCFNet
 from models.gaussian import fft_label
 from utils.misc import *
 
-weights_path = 'Training_withBB_model_epoch1'
+weights_path = 'Training_withBB_model_epoch50'
 output_path = 'Video2.txt'
 lambda0 = 1e-4
 crop_sz = 250
@@ -38,7 +38,7 @@ Video = 2
 id0 = 1
 idmax = 800
 
-c = [87, 71]
+c = [69, 114]
 initial_bb = BB_from_centers(c[0], c[1])
 
 
@@ -83,7 +83,7 @@ with torch.no_grad():
         cx = int(idx % N)
         cy = int((idx - cx)/N)
 
-        c = [cx, cy]
+        c = [cx + 1, cy + 1]
         with open(output_path, 'a') as f:
             f.write('resources/data/all_frames/vid{}_{}.jpg'.format(Video, id2) + '\n')
             f.write(str(c[0]) + ' ' + str(c[1]) + '\n')
