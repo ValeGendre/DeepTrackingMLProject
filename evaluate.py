@@ -10,8 +10,9 @@ from skimage.color import rgb2gray
 
 from models.model import DCFNet
 from models.gaussian import fft_label
+from utils.misc import *
 
-weights_path = 'Training_withBB_model_epoch1'
+weights_path = 'Training_withBB_model_epoch50'
 output_path = 'Trackingnew.txt'
 lambda0 = 1e-4
 crop_sz = 250
@@ -38,7 +39,7 @@ id0 = 1
 idmax = 250
 
 c = [87, 71]
-initial_bb = [c[0] - 25, c[1] - 25, 51, 51]
+initial_bb = BB_from_centers(c[0], c[1])
 
 
 
@@ -55,7 +56,7 @@ with torch.no_grad():
             plt.figure(tight_layout=True)
         id2 = id1 + 10
 
-        bounding_box = [c[0] - 25, c[1] - 25, 51, 51]
+        bounding_box = BB_from_centers(c[0], c[1])
         label, labelf = fft_label(output_sigma, [output_sz, output_sz], [crop_sz, crop_sz], initial_bb, (250, 250), DEVICE)
 
         template = rgb2gray(plt.imread(img_path.format(Video, id1))).astype(np.float32)
