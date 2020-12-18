@@ -13,7 +13,7 @@ from models.gaussian import fft_label
 from utils.misc import *
 
 weights_path = 'Training_croppedBB_newWindow_model_epoch10'
-output_path = 'test2.txt'
+output_path = 'rd.txt'
 crop_sz = 51
 output_sz = 31
 
@@ -25,7 +25,7 @@ output_sigma = crop_sz / (1 + padding) * output_sigma_factor
 
 DEVICE = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 
-show_img = False
+show_img = True
 
 model = DCFNet(lambda0)
 model.load_state_dict(torch.load(weights_path))
